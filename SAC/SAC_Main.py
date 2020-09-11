@@ -6,9 +6,9 @@ from SAC_Agent import Agent
 
 def plot_learning(x, scores, fig_file):
     running_avg = np.zeros(len(scores))
-    for i in running_avg:
-        running_avg[i]=np.mean(scores[max(0, i-100):i+1])
-    plt.plot(scores, x)
+    for i in range(len(running_avg)):
+        running_avg[i]=np.mean(scores[max(0, i-100):(i+1)])
+    plt.plot(x, running_avg)
     plt.title("Running avg-100 games")
     plt.savefig(fig_file)
 
@@ -35,7 +35,8 @@ if __name__=='__main__':
     if load_checkpoint:
         agent.load_models()
         env.render(mode='human')
-
+    else:
+        env.render(mode='human')
     steps=0
     for i in range(n_games):
         observation = env.reset()
@@ -43,7 +44,7 @@ if __name__=='__main__':
         score=0
         while not done:
             action = agent.choose_action(observation)
-            observation_, reward, info, done=env.step(action)
+            observation_, reward, done, info=env.step(action)
             agent.remember(observation, action, reward, observation_, done)
             steps+=1
             score+=reward
